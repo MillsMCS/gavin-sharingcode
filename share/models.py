@@ -35,7 +35,7 @@ class Script(models.Model):
         return self.title
     # FK
     coder = models.ForeignKey(Coder, on_delete=models.CASCADE, null=True)
-    problem = models.ForeignKey(Problem, on_delete=models.CASCADE, null = True)
+    problem = models.ForeignKey(Problem, on_delete=models.CASCADE, null=True)
 
     title = models.CharField(max_length=50, null=False, blank=False, unique=False)
     description = models.TextField(max_length=100, null=False, blank=False, unique=False)
