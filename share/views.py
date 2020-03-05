@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 
 # import redirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 # import all the models created so far
 from .models import Script, Problem, Coder
@@ -48,7 +48,7 @@ def create(request):
         username = request.POST['username']
         email = request.POST['email']
         password = request.POST['password']
-        coder_yet = request.POST['coder_yet_checkbox']
+        coder_yet = request.POST.get('coder_yet_checkbox' , False)
 
         if username is not None and email is not None and password is not None: # checking that they are not None
             if not username or not email or not password: # checking that they are not empty
@@ -160,9 +160,45 @@ def dashboard(request):
             return render(request, "share/dashboard.html", {"my_scripts": my_scripts, "my_problems": my_problems })
 
 # Module 4
-def show_problem(request, problem_id):
-    pass
+# def show_problem(request, problem_id):
+#     pass
 def show_my_problem(request, problem_id):
     pass
 def show_my_script(request, script_id):
+    pass
+# Module 5
+# def show_script(request, script_id):
+#     pass
+
+
+
+# Module 5
+def show_problem(request, problem_id):
+    if request.method == "GET":
+        user = request.user
+        if not user.is_authenticated:
+            return redirect("share:login")
+        else:
+            # make sure to import the fucntion get_object_or_404 from  django.shortcuts
+            problem = get_object_or_404(Problem, pk=problem_id)
+            scripts = Script.objects.filter(problem=problem_id)
+
+            return render(request, "share/problem.html", {"user":user, "problem":problem, "scripts": scripts})
+
+def show_script(request, script_id):
+    if request.method == "GET":
+        user = request.user
+        if not user.is_authenticated:
+            return redirect("share:login")
+        else:
+            # make sure to import the fucntion get_object_or_404 from  django.shortcuts
+            script = get_object_or_404(Script, pk=script_id)
+            problem = get_object_or_404(Problem, pk=script.problem.id)
+
+            return render(request, "share/script.html", {"user":user, "script": script, "problem":problem})
+# edit
+def edit_problem(request, problem_id):
+    pass
+
+def edit_script(request, script_id):
     pass
