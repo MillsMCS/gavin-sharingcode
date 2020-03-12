@@ -1,39 +1,56 @@
-<!-- show a problem belonging to any user  -->
+<!-- show a problem belonging to this user -->
 {% extends "share/base.html" %}
 {% block content %}
 
-
+<!--
 <hr> ##### testing ####  <br>
-problem: {{problem}} <br>
+problem: {{my_problem}} <br>
 scripts: {{scripts}} <br>
 ######################## <br>
+-->
 
-    <div class="columns">
-        <div class="column">
-            <h2 class="title is-2">Problem defined by: <span style="color:blue">{{ my_problem.coder.user.username }}</span></h2>
-                    <div class="box">
+  <div class="columns">
+      <div class="column">
+
+        {% if error %}
+          <h3 class="title is-3" style="color: red">{{ error }}</h3>
+        {% endif %}
+
+        <h2 class="title is-2">This is one of your problems
+          <span style="color:blue">{{ user.username }}</span>
+        </h2>
+        <div class="box">
+          <div class="content">
+
+              Title: {{ my_problem.title }} <br><br>
+              Description: {{ my_problem.description }} <br><br>
+              Discipline: {{ my_problem.discipline }} <br><br>
+              Created on {{ my_problem.created }} <br><br>
+
+              <!-- Module 6 -->
+              {% if my_problem.make_public %}
+              This problem is public! <br><br>
+              {% else %}
+              This problem is private!<br><br>
+              {% endif %}
+
+              {% if scripts %}   <!-- only show this block if there are solutions to this problem -->
+                <br>These are solutions to your problem:
+                <div class="box">
+                  {% for s in scripts %}
                     <div class="content">
-
-                          Title: {{ my_problem.title }} <br>
-                          Description: {{ my_problem.description }} <br>
-                          Discipline: {{ my_problem.discipline }} <br>
-                          Created on {{ my_problem.created}}<<br><<br>
-
-                    <div class="box"> These are the scripts solving the problem:
-
-                          {% for s in scripts %}
-                                  <div class="content">
-                                      <br>Script title: {{ s.title }}, written by  {{s.coder.user.username}}
-                                      <a class="button is-primary is-small" href="{% url 'share:show_script' s.id %}">Show the script ...</a>
-
-                                  </div>
-                          {% endfor %}
+                      <br>{{ s.title }}, written by  {{s.coder.user.username}}
+                      <a class="button is-primary is-small"
+                          href="{% url 'share:show_script' s.id %}">Show the script ...</a>
                     </div>
-
-                    </div>
+                  {% endfor %}
                 </div>
+              {% else %}
 
+                <br>These are solutions written for this problem
+              {% endif %}
 
+<<<<<<< HEAD
                  <a class="button is-primary is-medium" href="{% url 'share:edit_problem' my_problem.id %}">Make changes ... </a>
 <<<<<<< HEAD
 
@@ -41,7 +58,16 @@ scripts: {{scripts}} <br>
 
 >>>>>>> Module6
 
+=======
+              {% if user.id == my_problem.coder.user.id and not scripts %}
+                <a class="button is-primary is-medium"
+                href="{% url 'share:edit_problem' my_problem.id %}">Make changes ...</a>
+              {% endif %}
+>>>>>>> Module6
         </div>
     </div>
+
+  </div>
+</div>
 
 {% endblock content %}

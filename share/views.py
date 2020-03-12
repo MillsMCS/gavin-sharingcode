@@ -190,7 +190,19 @@ def show_my_script(request, script_id):
 
 
 
-# Module 5
+# # Module 5
+# def show_problem(request, problem_id):
+#     if request.method == "GET":
+#         user = request.user
+#         if not user.is_authenticated:
+#             return redirect("share:login")
+#         else:
+#             # make sure to import the fucntion get_object_or_404 from  django.shortcuts
+#             problem = get_object_or_404(Problem, pk=problem_id)
+#             scripts = Script.objects.filter(problem=problem_id)
+#
+#             return render(request, "share/problem.html", {"user":user, "problem":problem, "scripts": scripts})
+# Module 6 improved from Module 5
 def show_problem(request, problem_id):
     if request.method == "GET":
         user = request.user
@@ -201,7 +213,14 @@ def show_problem(request, problem_id):
             problem = get_object_or_404(Problem, pk=problem_id)
             scripts = Script.objects.filter(problem=problem_id)
 
-            return render(request, "share/problem.html", {"user":user, "problem":problem, "scripts": scripts})
+            # Module 6
+            if problem.make_public or problem.coder.user.id == user.id:
+                return render(request, "share/problem.html",
+                {"user":user, "problem":problem, "scripts": scripts})
+            else:
+                # the problem is private and you are not the author
+                return render(request, "share/index.html",
+                {"error":"The problem you clicked is still private and you are not the author"})
 
 def show_script(request, script_id):
     if request.method == "GET":
@@ -215,6 +234,24 @@ def show_script(request, script_id):
 
             return render(request, "share/script.html", {"user":user, "script": script, "problem":problem})
 # Module 6
+# def edit_problem(request, problem_id):
+#     if request.method == "GET":
+#         user = request.user
+#         if not user.is_authenticated:
+#             return redirect("share:login")
+#
+#         problem = get_object_or_404(Problem, pk=problem_id)
+#
+#         # does this problem have any scripts? if yes you can't update or delete
+#         scripts = Script.objects.filter(problem=problem_id)
+#
+#         return render(request, "share/edit_problem.html", {"problem":problem})
+#
+#     else:
+#         return redirect("share:index")
+#
+
+# Module 6 with error checking
 def edit_problem(request, problem_id):
     if request.method == "GET":
         user = request.user
@@ -226,12 +263,11 @@ def edit_problem(request, problem_id):
         # does this problem have any scripts? if yes you can't update or delete
         scripts = Script.objects.filter(problem=problem_id)
 
-        return render(request, "share/edit_problem.html", {"problem":problem})
-
-    else:
-        return redirect("share:index")
-
-
+        if problem.coder.user.id == user.id and not Script and not problem.make_public:
+            return render(request, "share/edit_problem.html", {"problem":problem})
+        else:
+            return render(request, "share/index.html",
+            {"error":"You are not the author of the problem that you tried to edit."})
 
 
 
@@ -239,6 +275,43 @@ def edit_script(request, script_id):
     pass
 
 # Module 6
+# def update_problem(request, problem_id):
+#     if request.method == "POST":
+#         user = request.user
+#         if not user.is_authenticated:
+#             return HttpResponse(status=500)
+#
+#         problem = get_object_or_404(Problem, pk=problem_id)
+#
+#         if not request.POST["title"] or not request.POST["description"] or not request.POST["discipline"]:
+#             return render(request, "share/edit_problem.html", {"problem":problem, "error":"One of the required fields was empty"})
+#
+#         else:
+#             title = request.POST["title"]
+#             description = request.POST["description"]
+#             discipline = request.POST["discipline"]
+#
+#             make_public = request.POST.get('make_public', False)
+#             print('***********************')
+#             print('user input make_public:', make_public)    # it shows as on
+#
+#             if make_public == 'on':
+#                 make_public = True
+#             else:
+#                 make_public = False
+#
+#             print('******** Testing *************')
+#             print('make_public:', make_public)
+#             print('***********************')
+#
+#             if problem.coder.user.id == user.id:
+#                 Problem.objects.filter(pk=problem_id).update(title=title, description=description, discipline=discipline, make_public=make_public)
+#
+#             return redirect("share:dashboard")
+#
+#     else:
+#         return HttpResponse(status=500)
+# Module 6 with error checking
 def update_problem(request, problem_id):
     if request.method == "POST":
         user = request.user
@@ -270,10 +343,29 @@ def update_problem(request, problem_id):
 
             if problem.coder.user.id == user.id:
                 Problem.objects.filter(pk=problem_id).update(title=title, description=description, discipline=discipline, make_public=make_public)
+            else:
+                return render(request, "share/edit_problem.html",
+                {"problem":problem, "error":"You are not the author of this problem. Can't edit!"})
 
             return redirect("share:dashboard")
 
     else:
         return HttpResponse(status=500)
+# Module 6
 def delete_problem(request, problem_id):
-    pass
+    if request.method == "POST":
+        user = request.user
+        if not user.is_authenticated:
+            return HttpResponse(status=500)
+
+        problem = get_object_or_404(Problem, pk=problem_id)
+
+        if problem.coder.user.id == user.id and not Script and not problem.make_public:
+            Problem.objects.get(pk=problem_id).delete()
+            return redirect("share:dashboard")
+        else:
+            return render(request, "share/edit_problem.html",
+            {"problem":problem, "error":"You are not the author of this problem. Can't delete!"})
+
+    else:
+        return HttpResponse(status=500)
