@@ -59,7 +59,7 @@ scripts: {{scripts}} <br>
 >>>>>>> Module6
 
 =======
-              {% if user.id == my_problem.coder.user.id and not scripts %}
+              {% if user.id == my_problem.coder.user.id and not scripts and not problem.make_public %}
                 <a class="button is-primary is-medium"
                 href="{% url 'share:edit_problem' my_problem.id %}">Make changes ...</a>
               {% endif %}
