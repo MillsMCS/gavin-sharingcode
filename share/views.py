@@ -263,7 +263,7 @@ def edit_problem(request, problem_id):
         # does this problem have any scripts? if yes you can't update or delete
         scripts = Script.objects.filter(problem=problem_id)
 
-        if problem.coder.user.id == user.id and not Script and not problem.make_public:
+        if problem.coder.user.id == user.id and not scripts and not problem.make_public:
             return render(request, "share/edit_problem.html", {"problem":problem})
         else:
             return render(request, "share/index.html",
@@ -360,7 +360,7 @@ def delete_problem(request, problem_id):
 
         problem = get_object_or_404(Problem, pk=problem_id)
 
-        if problem.coder.user.id == user.id and not Script and not problem.make_public:
+        if problem.coder.user.id == user.id and not scripts and not problem.make_public:
             Problem.objects.get(pk=problem_id).delete()
             return redirect("share:dashboard")
         else:
