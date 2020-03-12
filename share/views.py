@@ -172,7 +172,14 @@ def show_my_problem(request, problem_id):
                 my_problem = get_object_or_404(Problem, pk=problem_id)
                 scripts = Script.objects.filter(problem=problem_id)
 
-                return render(request, "share/show_my_problem.html", {"user":user, "my_problem":my_problem, "scripts": scripts})
+            if problem.make_public or problem.coder.user.id == user.id:
+                return render(request, "share/show_my_problem.html",
+                {"user":user, "my_problem":my_problem, "scripts": scripts})
+            else:
+                # the problem is private and you are not the author
+                return render(request, "share/index.html",
+                {"error":"The problem you clicked is still private and you are not the author"})
+
 def show_my_script(request, script_id):
     if request.method == "GET":
         user = request.user
@@ -265,10 +272,12 @@ def edit_problem(request, problem_id):
 
         if problem.coder.user.id == user.id and not scripts and not problem.make_public:
             return render(request, "share/edit_problem.html", {"problem":problem})
-        else:
+        elif not problem.coder.user.id == user.id:
             return render(request, "share/index.html",
             {"error":"You are not the author of the problem that you tried to edit."})
-
+        elif problem.coder.user.id == user.id:
+            return render(request, "share/index.html",
+            {"error":"You problem has scripts and you cannot edit it."})
 
 
 def edit_script(request, script_id):
