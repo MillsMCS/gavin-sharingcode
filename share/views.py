@@ -163,30 +163,6 @@ def dashboard(request):
 # def show_problem(request, problem_id):
 #     pass
 def show_my_problem(request, problem_id):
-<<<<<<< HEAD
-    if request.method == "GET":
-        user = request.user
-        if not user.is_authenticated:
-            return redirect("share:login")
-        else:
-            # make sure to import the fucntion get_object_or_404 from  django.shortcuts
-            my_problem = get_object_or_404(Problem, pk=problem_id)
-            scripts = Script.objects.filter(problem=problem_id)
-
-            return render(request, "share/show_my_problem.html", {"user":user, "my_problem": my_problem, "scripts": scripts})
-
-def show_my_script(request, script_id):
-        if request.method == "GET":
-            user = request.user
-            if not user.is_authenticated:
-                return redirect("share:login")
-            else:
-                # make sure to import the fucntion get_object_or_404 from  django.shortcuts
-                my_script = get_object_or_404(Script, pk=script_id)
-                problem = get_object_or_404(Problem, pk=my_script.problem.id)
-
-                return render(request, "share/show_my_script.html", {"user":user, "my_script": my_script, "problem":problem})
-=======
         if request.method == "GET":
             user = request.user
             if not user.is_authenticated:
@@ -208,7 +184,6 @@ def show_my_script(request, script_id):
             problem = get_object_or_404(Problem, pk=script.problem.id)
 
             return render(request, "share/show_my_script.html", {"user":user, "my_script": my_script, "problem":problem})
->>>>>>> Module6
 # Module 5
 # def show_script(request, script_id):
 #     pass
