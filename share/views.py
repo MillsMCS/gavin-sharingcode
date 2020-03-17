@@ -320,7 +320,8 @@ def delete_script(request, script_id):
             return redirect("share:dashboard")
         else:
             all_problems = Problem.objects.all()
-            return render(request, "share/index.html", {"user":user, "all_problems": all_problems, "error":"Can't delete the script!"})
+            return render(request, "share/index.html",
+            {"user":user, "all_problems": all_problems, "error":"Can't delete the script!"})
 
     else:
         return HttpResponse(status=500)
