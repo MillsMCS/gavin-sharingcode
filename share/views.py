@@ -162,35 +162,35 @@ def dashboard(request):
 # Module 4
 # def show_problem(request, problem_id):
 #     pass
-def show_my_problem(request, problem_id):
-        if request.method == "GET":
-            user = request.user
-            if not user.is_authenticated:
-                return redirect("share:login")
-            else:
-                # make sure to import the fucntion get_object_or_404 from  django.shortcuts
-                my_problem = get_object_or_404(Problem, pk=problem_id)
-                scripts = Script.objects.filter(problem=problem_id)
-
-            if problem.make_public or problem.coder.user.id == user.id:
-                return render(request, "share/show_my_problem.html",
-                {"user":user, "my_problem":my_problem, "scripts": scripts})
-            else:
-                # the problem is private and you are not the author
-                return render(request, "share/index.html",
-                {"error":"The problem you clicked is still private and you are not the author"})
-
-def show_my_script(request, script_id):
-    if request.method == "GET":
-        user = request.user
-        if not user.is_authenticated:
-            return redirect("share:login")
-        else:
-            # make sure to import the fucntion get_object_or_404 from  django.shortcuts
-            my_script = get_object_or_404(Script, pk=script_id)
-            problem = get_object_or_404(Problem, pk=script.problem.id)
-
-            return render(request, "share/show_my_script.html", {"user":user, "my_script": my_script, "problem":problem})
+# def show_my_problem(request, problem_id):
+#         if request.method == "GET":
+#             user = request.user
+#             if not user.is_authenticated:
+#                 return redirect("share:login")
+#             else:
+#                 # make sure to import the fucntion get_object_or_404 from  django.shortcuts
+#                 my_problem = get_object_or_404(Problem, pk=problem_id)
+#                 scripts = Script.objects.filter(problem=problem_id)
+#
+#             if problem.make_public or problem.coder.user.id == user.id:
+#                 return render(request, "share/show_my_problem.html",
+#                 {"user":user, "my_problem":my_problem, "scripts": scripts})
+#             else:
+#                 # the problem is private and you are not the author
+#                 return render(request, "share/index.html",
+#                 {"error":"The problem you clicked is still private and you are not the author"})
+#
+# def show_my_script(request, script_id):
+#     if request.method == "GET":
+#         user = request.user
+#         if not user.is_authenticated:
+#             return redirect("share:login")
+#         else:
+#             # make sure to import the fucntion get_object_or_404 from  django.shortcuts
+#             my_script = get_object_or_404(Script, pk=script_id)
+#             problem = get_object_or_404(Problem, pk=script.problem.id)
+#
+#             return render(request, "share/show_my_script.html", {"user":user, "my_script": my_script, "problem":problem})
 # Module 5
 # def show_script(request, script_id):
 #     pass
@@ -330,7 +330,8 @@ def update_problem(request, problem_id):
         problem = get_object_or_404(Problem, pk=problem_id)
 
         if not request.POST["title"] or not request.POST["description"] or not request.POST["discipline"]:
-            return render(request, "share/edit_problem.html", {"problem":problem, "error":"One of the required fields was empty"})
+            return render(request, "share/edit_problem.html", {"problem":problem,
+            "error":"One of the required fields was empty"})
 
         else:
             title = request.POST["title"]
@@ -351,15 +352,22 @@ def update_problem(request, problem_id):
             print('***********************')
 
             if problem.coder.user.id == user.id:
-                Problem.objects.filter(pk=problem_id).update(title=title, description=description, discipline=discipline, make_public=make_public)
+                Problem.objects.filter(pk=problem_id).update(title=title,
+                description=description, discipline=discipline, make_public=make_public)
+                return redirect("share:dashboard")
             else:
                 return render(request, "share/edit_problem.html",
                 {"problem":problem, "error":"You are not the author of this problem. Can't edit!"})
 
-            return redirect("share:dashboard")
+
 
     else:
-        return HttpResponse(status=500)
+        user = request.user
+        all_problems = Problem.objects.all()
+        return return render(request, "share/index.html",
+        {"problem":problem, "user": user, "all_problems": all_problems,
+        "error":"Can't update!"})
+
 # Module 6
 def delete_problem(request, problem_id):
     if request.method == "POST":
