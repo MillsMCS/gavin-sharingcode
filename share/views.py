@@ -2,13 +2,10 @@ from django.http import HttpResponse
 # Module 3 imports
 # import three functions: authentication, login, logout
 from django.contrib.auth import authenticate, login, logout
-
 # import redirect
 from django.shortcuts import render, redirect, get_object_or_404
-
 # import all the models created so far
 from .models import Script, Problem, Coder
-
 # import User model
 from django.contrib.auth.models import User
 
@@ -306,7 +303,6 @@ def update_script(request, script_id):
         all_problems = Problem.objects.all()
         return render(request, "share/index.html",
         {"user":user, "all_problems": all_problems, "error":"It was not a POST request!"})
-
 def delete_script(request, script_id):
     if request.method == "GET":
         user = request.user
