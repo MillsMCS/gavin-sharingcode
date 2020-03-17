@@ -28,7 +28,7 @@
                     <h2 class="title" style="color:#00d1b2">Problems defined by you:</h2>
                     {% for p in my_problems %}
                             <div class="content"> {{ p.title }}
-                              <a class="button is-primary is-small" href="{% url 'share:show_my_problem' p.id %}">Show more ...</a>
+                              <a class="button is-primary is-small" href="{% url 'share:show_problem' p.id %}">Show more ...</a>
                                                                   <!-- create show_my_problem route right away -->
 
                             </div>
@@ -41,7 +41,7 @@
                             <div class="content">
                                 <br>Script Title: {{ s.title }}, Solves: {{ s.problem.title }}, posted by {{s.problem.coder.user.username}}
 
-                                <a class="button is-primary is-small" href="{% url 'share:show_my_script' s.id %}">Show more ...</a>
+                                <a class="button is-primary is-small" href="{% url 'share:show_script' s.id %}">Show more ...</a>
                                                                   <!-- create show_my_script route right away -->
                             </div>
                     {% endfor %}
