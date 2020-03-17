@@ -21,10 +21,8 @@ urlpatterns = [
 
     # Show Problems
     path('problem/<int:problem_id>/show', views.show_problem, name='show_problem'),
-    path('problem/<int:problem_id>/show_my_problem', views.show_my_problem, name='show_my_problem'),
 
     # scripts
-    path('script/<int:script_id>/show_my_script', views.show_my_script, name='show_my_script'),
     path('script/<int:script_id>/show', views.show_script, name='show_script'),
 
     # edit
@@ -34,6 +32,8 @@ urlpatterns = [
     #update and delete
     path('problem/<int:problem_id>/update', views.update_problem, name='update_problem'),
     path('problem/<int:problem_id>/delete', views.delete_problem, name='delete_problem'),
+    path('script/<int:script_id>/update', views.update_script, name='update_script'),
+    path('scsript/<int:script_id>/delete', views.delete_script, name='delete_script'),
 
 
 ]
