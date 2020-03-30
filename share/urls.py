@@ -20,5 +20,5 @@ urlpatterns = [
     path('script/<int:script_id>/show', views.show_script, name='show_script'),
     path('script/<int:script_id>/edit', views.edit_script, name='edit_script'),
     path('script/<int:script_id>/update', views.update_script, name='update_script'),
-    path('scsript/<int:script_id>/delete', views.delete_script, name='delete_script'),
+    path('script/<int:script_id>/delete', views.delete_script, name='delete_script'),
 ]

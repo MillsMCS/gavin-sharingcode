@@ -11,8 +11,10 @@
 </head>
 
 <body>
-<nav class="navbar is-primary" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
+  <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+
+
+   <div class="navbar-brand">
         <a class="navbar-item" href="{% url 'share:index' %}">
             <img src="{% static 'share/images/thinking-face.png' %}" alt=" icon" width="40" height="60">
             Python <br>Thinkers
@@ -31,7 +33,7 @@
     <div id="navbarData" class="navbar-menu is-active" >
       <!-- navbar-menu hidden in mobile devices -->
       <!-- is-actice makes id show in mobile devices -->
-   <div class="navbar-start">
+      <div class="navbar-start">
 
      <a class="navbar-item" href="{% url 'share:dashboard' %}">My Dashboard</a>
 
@@ -70,7 +72,7 @@
          </div>
        </div>
      </div>
-   </nav>
+     </nav>
 
 <section class="section">
     <div class="container">
