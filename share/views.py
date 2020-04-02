@@ -136,25 +136,30 @@ def create_problem(request):
             make_public = False
 
         if not title and not description:
-            return render(request, "share/publish_problem_form.html", {"error":"Please fill in all required fields"})
+            return render(request, "share/publish_problem_form.html",
+             {"error":"Please fill in all required fields"})
 
         try:
-            problem = Problem.objects.create(coder=coder, title=title, description=description, discipline=discipline, make_public=make_public)
+            problem = Problem.objects.create(coder=coder, title=title,
+             description=description, discipline=discipline, make_public=make_public)
             problem.save()
 
             problem = get_object_or_404(Problem, pk=problem.id)
             scripts = Script.objects.filter(problem=problem.id)
 
-            return render(request, "share/problem.html",{"user":user, "problem":problem, "scripts": scripts})
+            return render(request, "share/problem.html",{"user":user,
+             "problem":problem, "scripts": scripts})
 
         except:
-            return render(request, "share/publish_problem_form.html", {"error":"Can't create the problem"})
+            return render(request, "share/publish_problem_form.html",
+             {"error":"Can't create the problem"})
 
     else:
         # the user enteing    http://127.0.0.1:8000/problem/8/create
         user = request.user
         all_problems = Problem.objects.all()
-        return render(request, "share/index.html", {"user":user, "all_problems": all_problems, "error":"Can't create!"})
+        return render(request, "share/index.html",
+        {"user":user, "all_problems": all_problems, "error":"Can't create!"})
 def show_problem(request, problem_id):
     if request.method == "GET":
         user = request.user
