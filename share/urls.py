@@ -17,9 +17,11 @@ urlpatterns = [
     path('problem/<int:problem_id>/update', views.update_problem, name='update_problem'),
     path('problem/<int:problem_id>/delete', views.delete_problem, name='delete_problem'),
     path('problem/create', views.create_problem, name='create_problem'),
+    path('problem/<int:problem_id>/build_script', views.build_script, name='build_script'),
+    path('problem/<int:problem_id>/create_script', views.create_script, name='create_script'),
     # scripts
     path('script/<int:script_id>/show', views.show_script, name='show_script'),
     path('script/<int:script_id>/edit', views.edit_script, name='edit_script'),
     path('script/<int:script_id>/update', views.update_script, name='update_script'),
-    path('script/<int:script_id>/delete', views.delete_script, name='delete_script'),
+    path('script/<int:script_id>/delete', views.delete_script, name='delete_script'),    
 ]
