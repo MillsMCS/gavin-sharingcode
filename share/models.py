@@ -3,6 +3,10 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from django.utils import timezone
+
+    # Module 10
+from django.core.validators import MaxValueValidator, MinValueValidator
+
 # Module 0
 # Script model
 class Coder(models.Model):
@@ -21,7 +25,7 @@ class Problem(models.Model):
 
     coder = models.ForeignKey(Coder, on_delete=models.CASCADE)
     title = models.CharField(max_length=50, null=False, blank=False, unique=False)
-    description = models.TextField(max_length=100, null=False, blank=False, unique=False)
+    description = models.CharField(max_length=100, null=False, blank=False, unique=False)
     image = models.ImageField(upload_to='myproblems/', blank=True)
     discipline = models.CharField(max_length=50, null=False, blank=False, unique=False)
     make_public = models.BooleanField(default=True)
@@ -51,3 +55,17 @@ class Script(models.Model):
 
     created = models.DateField(auto_now_add=True)
     updated = models.DateField(auto_now=True)
+
+
+
+class Review(models.Model):
+	def __str__(self):
+		return self.feedback
+
+	script = models.ForeignKey(Script, on_delete=models.CASCADE)
+	coder = models.ForeignKey(Coder, on_delete=models.CASCADE)
+	stars = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(3)])
+	feedback = models.TextField(max_length=200, unique=False, blank=True)
+
+	class Meta:
+		unique_together = (('coder', 'script'),)

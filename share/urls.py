@@ -10,7 +10,7 @@ urlpatterns = [
     path('logout',views.logout_view, name='logout'),
     path('',views.index, name='index'),
     path('dashboard', views.dashboard, name='dashboard'),
-    #problems
+    # problems
     path('problem/publish', views.publish_problem, name='publish_problem'),
     path('problem/<int:problem_id>/show', views.show_problem, name='show_problem'),
     path('problem/<int:problem_id>/edit', views.edit_problem,  name='edit_problem'),
@@ -23,5 +23,8 @@ urlpatterns = [
     path('script/<int:script_id>/show', views.show_script, name='show_script'),
     path('script/<int:script_id>/edit', views.edit_script, name='edit_script'),
     path('script/<int:script_id>/update', views.update_script, name='update_script'),
-    path('script/<int:script_id>/delete', views.delete_script, name='delete_script'),    
+    path('script/<int:script_id>/delete', views.delete_script, name='delete_script'),
+    # reviews
+    path('script/<int:script_id>/create_review', views.create_review, name='create_review'),
+    path('review/<int:review_id>/delete_review', views.delete_review, name='delete_review'),
 ]

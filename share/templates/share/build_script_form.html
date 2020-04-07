@@ -10,7 +10,7 @@
 
     <div class="publish-form columns">
 
-    <div class="column" >
+    <div class="columns is-6 is-offset-one-quarter" >
       <h4 class="title is-5"> Create your Python script to solve: {{problem.title}}</h4>
 
       <form action="{% url 'share:create_script' problem.id  %}" method="post">
@@ -68,6 +68,12 @@
               <br>Are you ready to make this problem public?
               <input type="checkbox"  id="make_public" name="make_public" />
         </label>
+
+        <label class="checkbox">
+          <br>Is this script working?
+              <input type="checkbox"  id="working_code" name="working_code" />
+        </label>
+
 
         <br><br><br>
 
