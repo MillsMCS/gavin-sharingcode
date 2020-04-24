@@ -165,6 +165,7 @@ def show_problem(request, problem_id):
         user = request.user
         if not user.is_authenticated:
             return redirect("share:login")
+            user_script = Script.objects.filter(coder=user.id).filter(problem=problem.id)
         else:
             # make sure to import the fucntion get_object_or_404 from  django.shortcuts
             problem = get_object_or_404(Problem, pk=problem_id)
@@ -202,6 +203,7 @@ def update_problem(request, problem_id):
         user = request.user
         if not user.is_authenticated:
             return HttpResponse(status=500)
+
 
         problem = get_object_or_404(Problem, pk=problem_id)
 
@@ -452,13 +454,13 @@ def create_review(request,script_id):
         coder = user.coder
         feedback = request.POST["feedback"]
 
-        stars = request.POST.get('stars', False)
+        stars = request.POST.get('stars')
         print('************************')
         print(stars)
 
-        if stars == 'Confusing':
+        if stars == 'confusing':
             stars = 1
-        elif stars ==  "Clear":
+        elif stars == 'clear':
             stars = 2
         else:
             stars = 3
@@ -510,5 +512,23 @@ def delete_review(request, review_id):
             return render(request, "share/script.html",
             {"user":user, "problem": problem, "script":script, "reviews":reviews, "user_review":user_review, "error":"Can't delete the review!"})
 
+    else:
+        return HttpResponse(status=500)
+# Module 11
+def search(request):
+    if request.method == "POST":
+        user = request.user
+        if not user.is_authenticated:
+            return HttpResponse(status=500)
+
+        query = request.POST["query"]
+
+        if not query:
+            return render(request, "share/search_result.html", {"error":"Empty search"})
+
+        scripts = Script.objects.filter(title__icontains=query) | Script.objects.filter(description__icontains=query)
+        problems = Problem.objects.filter(title__icontains= query) | Problem.objects.filter(description__icontains=query)
+
+        return render(request, "share/search_result.html", {"user":user, "scripts":scripts, "query":query, "problems":problems})
     else:
         return HttpResponse(status=500)
