@@ -9,6 +9,7 @@ from .models import Script, Problem, Coder
 # import User model
 from django.contrib.auth.models import User
 from share.models import Script, Problem, Coder, Review
+from share.find_offensive_language import offensive
 
 
 def signup(request):
@@ -451,6 +452,7 @@ def create_review(request,script_id):
         script = get_object_or_404(Script, pk=script_id)
         problem = get_object_or_404(Problem, pk=script.problem.id)
 
+
         coder = user.coder
         feedback = request.POST["feedback"]
 
@@ -476,7 +478,14 @@ def create_review(request,script_id):
             {"user":user, "problem":problem, "script": script, "reviews":reviews, "user_review":user_review})
 
         except:
-            return render(request, "share/script.html", {"error":"Can't create the script"})
+            if offensive(feedback):
+                reviews = Review.objects.filter(script=script_id)
+                user_review = Review.objects.filter(coder=user.id).filter(script=script.id)
+
+                return render(request, "share/script.html",
+                {"user":user, "problem":problem, "script": script, "reviews":reviews,
+                "user_review":user_review, "error":"Can't create the review with offensive language"})
+
 
     else:
         # the user enteing    http://127.0.0.1:8000/problem/8/create
@@ -530,5 +539,17 @@ def search(request):
         problems = Problem.objects.filter(title__icontains= query) | Problem.objects.filter(description__icontains=query)
 
         return render(request, "share/search_result.html", {"user":user, "scripts":scripts, "query":query, "problems":problems})
+    else:
+        return HttpResponse(status=500)
+
+def scripts(request):
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            user = request.user
+            scripts = Script.objects.all()
+
+            return render(request, "share/scripts.html", {"user":user, "scripts": scripts})
+        else:
+            return redirect("share:login")
     else:
         return HttpResponse(status=500)

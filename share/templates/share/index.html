@@ -22,6 +22,7 @@
                   <div class="content" align="left">
                       <a class="button is-success is-small" href="{% url 'share:show_problem' p.id %}">
                         {{ p.title }} </a> by {{ p.coder.user.username }}
+                        {{ p.num_of_scripts }} Python scripts
                   </div>
               </div>
 {% endfor %}

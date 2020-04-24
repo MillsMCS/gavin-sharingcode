@@ -1,0 +1,45 @@
+{% extends "share/base.html" %}
+
+{% block content %}
+
+{% if error %}
+  		<h3 class="title is-3" style="color: red">{{ error }}</h3>
+{% endif %}
+
+<!-- objects passed by the view function: user, scripts -->
+
+<div class="has-text-centered tile is-ancestor">
+          <div style="margin: auto" class="tile is-8 is-parent">
+              <div class="tile is-child box">
+                  <h1 class="title is-2"> Hello <span style="color:#1496ed">{{ user.username }}</span> </h1>
+           <h2 class="title is-3">Welcome to solving problems with python.</h2>
+           <h4 class="title is-5" style="color:#1496ed">Take a look at the list of Python solutions: </h4>
+
+{% for s in scripts %}
+              <div class="box">
+                  <div class="content" align="left">
+                      <a class="button is-success is-small" href="{% url 'share:show_script' s.id %}">
+                        {{ s.title }} </a> by {{ s.coder.user.username }}
+                        {{ s.num_of_reviews }} written reviews, with average review={{s.avg_review}}
+                  </div>
+              </div>
+{% endfor %}
+
+
+  <h2 class="title is-4">Reviews</h2>
+  <div class="box">
+    This script has an average review of {{script.avg_review}} out of 3
+  </div>
+  <div class="box">
+    <div class="content">
+    {% if reviews %}
+      {% for r in reviews %}
+            {% if r.stars == 1 %} Confusing (1 pts)
+            {% elif r.stars == 2 %} Clear (2 pts)
+            {% elif r.stars == 3 %} Outstanding (3 pts)
+
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+
+{% endblock content %}

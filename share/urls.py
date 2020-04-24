@@ -24,6 +24,7 @@ urlpatterns = [
     path('script/<int:script_id>/edit', views.edit_script, name='edit_script'),
     path('script/<int:script_id>/update', views.update_script, name='update_script'),
     path('script/<int:script_id>/delete', views.delete_script, name='delete_script'),
+    path('scripts',views.scripts, name='scripts'),
     # reviews
     path('script/<int:script_id>/create_review', views.create_review, name='create_review'),
     path('review/<int:review_id>/delete_review', views.delete_review, name='delete_review'),
